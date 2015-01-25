@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+        <Button android:id="@+id/btnOK"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="@string/gps_confirm"
+            />
+        <Button android:id="@+id/btnCancel"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="@string/gps_skip"
+            />
+    </LinearLayout>
+</LinearLayout>

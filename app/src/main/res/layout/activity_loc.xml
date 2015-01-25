@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlw"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="100dp"
+    android:paddingRight="100dp"
+    android:paddingTop="100dp"
+    android:paddingBottom="100dp"
+    tools:context=".WeatherActivity">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/white">
+
+    <RelativeLayout
+        android:id="@+id/search_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        >
+        <AutoCompleteTextView
+            android:id="@+id/country_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="country"
+            android:inputType="text"
+            android:singleLine="true"
+            android:completionThreshold="1">
+        </AutoCompleteTextView>
+
+        <ImageButton
+            android:id="@+id/search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/country_search"
+            android:src="@android:drawable/ic_menu_search"
+            android:background="@color/whiteTras"/>
+        <!--ic_menu_search_holo_light-->
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/country_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_rl"
+        />
+
+    </RelativeLayout>
+</RelativeLayout>

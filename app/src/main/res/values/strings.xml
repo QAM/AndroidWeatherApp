@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Weather</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="gps_confirm">Turn on Location Service</string>
+    <string name="gps_skip">Skip</string>
+    <string name="gps_question">To See your local weather, please turn on the location service</string>
+
+</resources>
