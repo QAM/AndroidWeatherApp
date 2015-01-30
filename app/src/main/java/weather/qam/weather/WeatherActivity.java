@@ -18,6 +18,9 @@ import android.app.Activity;
 import android.content.Loader;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import android.util.Log;
 import android.view.View.OnTouchListener;
@@ -43,6 +46,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.os.Handler;
+import android.os.Message;
+import android.widget.Toast;
 
 public class WeatherActivity extends ActionBarActivity
                             implements LoaderManager.LoaderCallbacks<List<JsonYahooWeather>>
@@ -59,6 +65,10 @@ public class WeatherActivity extends ActionBarActivity
     String locProvider;
     Activity mActivity;
     int activityReqNum = 1;
+    final String HANDLER_CLEAR_BACK_FLAG = "GET_GPS";
+    final String HANDLER_GET_GPS="CLEAR_BACK_FLAG";
+    int gps_count = 0;
+    boolean mbackPressed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,7 +217,8 @@ public class WeatherActivity extends ActionBarActivity
     }
 
     private void popDlgGpsOnOff(){
-        if( locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ) return;
+        if( locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) )
+            sendHandlerCommand(DOCommandhandler, HANDLER_GET_GPS);
         else{
             mEnableGPS = new Dialog(mActivity);
             mEnableGPS.setTitle(mActivity.getResources().getString(R.string.gps_question));
@@ -260,8 +271,9 @@ public class WeatherActivity extends ActionBarActivity
                 // The user picked a contact.
                 // The Intent's data Uri identifies which contact was selected.
                 Log.i(TAG, "onActivityResult");
-                getWeatherBYText(data.getStringExtra("MESSAGE"));
-                // Do something with the contact here (bigger example below)
+                String s = data.getStringExtra("MESSAGE");
+                if(s.equals(AppConstant.currentLoc)) popDlgGpsOnOff();
+                else getWeatherBYText(data.getStringExtra("MESSAGE"));
             }
         }
     }
@@ -275,6 +287,7 @@ public class WeatherActivity extends ActionBarActivity
 
     private Button.OnClickListener loginDlgBtnSkipOnClkLis = new Button.OnClickListener() {
         public void onClick(View v) {
+            getWeatherDefault();
             mEnableGPS.cancel();
         }
     };
@@ -304,7 +317,23 @@ public class WeatherActivity extends ActionBarActivity
     @Override
     public void onBackPressed(){
         Log.i(TAG,"onBackPressed");
-        super.onBackPressed();
+        if(mbackPressed)
+            super.onBackPressed();
+        else{
+            mbackPressed = true;
+            Toast.makeText(WeatherActivity.this, getResources().getString(R.string.back_notify), Toast.LENGTH_SHORT).show();
+            sendHandlerCommand(DOCommandhandler, HANDLER_CLEAR_BACK_FLAG);
+        }
+
+    }
+
+    private void getWeatherDefault(){
+        InputStream in2 = FileOperation.readFile(this,getExternalCacheDir().toString(), AppConstant.weatherFileName);
+        if(null != in2) try {
+            fillUI(JsonYahooWeather.weatherParse(in2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //getWeatherBYText("New York");
@@ -390,11 +419,38 @@ public class WeatherActivity extends ActionBarActivity
     public void onProviderEnabled(String provider) {
         Log.i(TAG, "onProviderEnabled");
         locProvider = provider;
+        locationManager.requestLocationUpdates(locProvider, 400, 1, this);
+        sendHandlerCommand(DOCommandhandler, HANDLER_GET_GPS);
     }
 
     @Override
     public void onProviderDisabled(String provider) {
         Log.i(TAG, "onProviderDisabled");
-
     }
+
+    private void sendHandlerCommand(Handler h, String obj){
+        Message message = h.obtainMessage(1,obj);
+        h.sendMessageDelayed(message, 3000);
+    }
+
+    protected Handler DOCommandhandler =  new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String MsgString = (String)msg.obj;
+            if (MsgString.equals(HANDLER_CLEAR_BACK_FLAG)) {
+                mbackPressed = false;
+            }else if(MsgString.equals(HANDLER_GET_GPS)){
+                if( gps_count++ < 5 ){
+                    Location loc = locationManager.getLastKnownLocation(locProvider);
+                    if(null != loc){
+                        onLocationChanged(loc);
+                    }
+                }else{
+                    gps_count = 0;
+                }
+            }
+
+        }
+    };
 }

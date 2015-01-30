@@ -36,4 +36,9 @@ public class AppConstant {
     public static final String weatherFileName = "weatherJson";
 
     public static final String placesFileName = "places";
+
+    public static final String currentLoc = "Current Location";
+
+    public static final String COUNTRY_DB_TABLENAME = "country";
+    public static final String HISTORY_DB_TABLENAME = "history";
 }

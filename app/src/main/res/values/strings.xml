@@ -7,5 +7,6 @@
     <string name="gps_confirm">Turn on Location Service</string>
     <string name="gps_skip">Skip</string>
     <string name="gps_question">To See your local weather, please turn on the location service</string>
+    <string name="back_notify">Press Again to Exit</string>
 
 </resources>
