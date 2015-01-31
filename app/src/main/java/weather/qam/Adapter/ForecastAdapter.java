@@ -28,7 +28,6 @@ public class ForecastAdapter extends ArrayAdapter<Forecast> {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return super.getCount();
     }
 

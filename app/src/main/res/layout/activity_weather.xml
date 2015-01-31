@@ -1,14 +1,22 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:ripple="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rlw"
+    android:id="@+id/slw"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".WeatherActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:scrollbars="none"
+    tools:context=".WeatherActivity">
 
-
+<RelativeLayout
+    android:id="@+id/rlw"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    
+    
     <!--Location-->
     <TextView
         android:id="@+id/location_city"
@@ -77,12 +85,185 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="false"
+            android:focusable="false"
             android:listSelector="@android:color/transparent"
             android:cacheColorHint="@android:color/transparent"/>
     </LinearLayout>
 
 
+    <!--atmosphere-->
+    <LinearLayout
+        android:id="@+id/atmosphere"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/forecast">
+    <TextView
+        android:id="@+id/atmosphere_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:id="@+id/atmosphere_sun"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="0dp">
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="30dp">
+                <ImageView
+                    android:id="@+id/atmosphere_hum_icon"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/humidity"
+                    android:visibility="invisible"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/atmosphere_hum"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="30dp">
+                <ImageView
+                    android:id="@+id/atmosphere_press_icon"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/pressure"
+                    android:visibility="invisible"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/atmosphere_press"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="30dp">
+                <ImageView
+                    android:id="@+id/atmosphere_visib_icon"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/eye"
+                    android:visibility="invisible"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:id="@+id/atmosphere_visib"
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+            
+        </LinearLayout>
+    </LinearLayout>
+    </LinearLayout>
+
+
+    <!--wind-->
+    <LinearLayout
+        android:id="@+id/wind"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/atmosphere">
+    <TextView
+        android:id="@+id/wind_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="30dp">
+        <ImageView
+            android:id="@+id/wind_mill"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/windmill"
+            android:visibility="invisible"/>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="4"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp">
+            <ImageView
+                android:id="@+id/wind_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"/>
+            <TextView
+                android:id="@+id/wind_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/wind_arrow"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="5dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/astronomy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/wind">
+        <TextView
+            android:id="@+id/astronomy_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"/>
+        <weather.qam.View.SunAnimateView
+            android:id="@+id/astronomy_sun"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:visibility="invisible"
+            android:layout_below="@id/astronomy_name"/>
+        <TextView
+            android:id="@+id/astronomy_sunrise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/astronomy_sun"
+            android:layout_alignParentLeft="true"/>
+        <TextView
+            android:id="@+id/astronomy_sunset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/astronomy_sun"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
 
     <weather.qam.View.RippleView
         android:id="@+id/rv"
@@ -101,3 +282,4 @@
     </weather.qam.View.RippleView>
 
 </RelativeLayout>
+</ScrollView>

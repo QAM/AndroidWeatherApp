@@ -15,6 +15,7 @@ import weather.qam.util.CoutryDBHelper;
 
 import java.util.Collections;
 import weather.qam.Adapter.HistoryAdapter;
+import weather.qam.util.ViewHelper;
 
 /**
  * Created by qam on 1/24/15.
@@ -64,6 +65,7 @@ public class LocActivity extends Activity implements AdapterView.OnItemClickList
         HistoryAdapter ha = new HistoryAdapter(this, 0, hlist);
         cityList.setAdapter(ha);
         cityList.setOnItemClickListener(this);
+        ViewHelper.adjustListView(cityList);
     }
 
     @Override

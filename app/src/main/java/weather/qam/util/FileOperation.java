@@ -70,7 +70,4 @@ public class FileOperation {
         }
     }
 
-    //3. store sharedpreference for user input places
-    //TODO store places in db
-
 }

@@ -28,7 +28,6 @@ public class HistoryAdapter extends ArrayAdapter<String>{
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return super.getCount();
     }
 

@@ -21,10 +21,13 @@ import android.view.View;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.List;
 import android.util.Log;
 import android.view.View.OnTouchListener;
 import weather.qam.View.RippleView;
+import weather.qam.util.ViewHelper;
+
 import android.widget.PopupWindow;
 import android.app.Dialog;
 import android.content.Intent;
@@ -49,6 +52,11 @@ import android.widget.ListView;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
+import android.widget.ScrollView;
+import java.sql.Time;
+import android.R.drawable;
+import weather.qam.util.SunTime;
+import weather.qam.View.SunAnimateView;
 
 public class WeatherActivity extends ActionBarActivity
                             implements LoaderManager.LoaderCallbacks<List<JsonYahooWeather>>
@@ -60,6 +68,7 @@ public class WeatherActivity extends ActionBarActivity
     RippleView rv_btn;
     PopupWindow popupWindow;
     View rlw;
+    View slw;
     private Dialog mEnableGPS;
     private LocationManager locationManager;
     String locProvider;
@@ -69,6 +78,7 @@ public class WeatherActivity extends ActionBarActivity
     final String HANDLER_GET_GPS="CLEAR_BACK_FLAG";
     int gps_count = 0;
     boolean mbackPressed = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,40 +146,11 @@ public class WeatherActivity extends ActionBarActivity
         });
 
         rlw = (View) findViewById(R.id.rlw);
-        rlw.setOnTouchListener(new OnTouchListener() {
-            int touchdownY = 0;
 
-            public boolean onTouch(View v, MotionEvent event) {
+        slw = (View) findViewById(R.id.slw);
+        //slw.setOnTouchListener(floatBtnListener);
+        rlw.setOnTouchListener(floatBtnListener);
 
-                //int action = event.getAction();
-
-                int x = (int) event.getRawX();
-                int y = (int) event.getRawY();
-
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: // touch down so check if the
-                        touchdownY = y;
-                        break;
-
-                    case MotionEvent.ACTION_MOVE: // touch drag with the ball
-                        Log.i(TAG, "value is: " + (y - touchdownY));
-                        if (y < touchdownY) {
-                            if (rv_btn.getVisibility() == View.VISIBLE)
-                                rv_btn.setVisibility(View.INVISIBLE);
-                        } else if (y > touchdownY) {
-                            if (rv_btn.getVisibility() == View.INVISIBLE)
-                                rv_btn.setVisibility(View.VISIBLE);
-                        }
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                        break;
-                }
-
-                return true;
-            }
-
-        });
 
 
         //initPopUpLOC(this);
@@ -377,7 +358,61 @@ public class WeatherActivity extends ActionBarActivity
         ListView forecast_list = (ListView) findViewById(R.id.forecast_list);
         ForecastAdapter adapter = new ForecastAdapter(this, 0, d.forecastList);
         forecast_list.setAdapter(adapter);
+        ViewHelper.adjustListView(forecast_list);
+        forecast_list.setOnTouchListener(floatBtnListener);
+
+        //atmosphere
+        TextView atmos_name = (TextView) findViewById(R.id.atmosphere_name);
+        atmos_name.setText("Atmosphere");
+        ImageView atmos_sun = (ImageView) findViewById(R.id.atmosphere_sun);
+        if(isNight(d.astronomy.sunset, d.astronomy.sunrise)) atmos_sun.setImageDrawable(getResources().getDrawable(R.drawable.sunset));
+        else atmos_sun.setImageDrawable(getResources().getDrawable(R.drawable.sunrise));
+        TextView atmos_hum = (TextView) findViewById(R.id.atmosphere_hum);
+        atmos_hum.setText(d.atmosphere.humidity);
+        TextView atmos_press = (TextView) findViewById(R.id.atmosphere_press);
+        atmos_press.setText(d.atmosphere.pressure);
+        TextView atmos_visib = (TextView) findViewById(R.id.atmosphere_visib);
+        atmos_visib.setText(d.atmosphere.visibility);
+        findViewById(R.id.atmosphere_hum_icon).setVisibility(View.VISIBLE);
+        findViewById(R.id.atmosphere_press_icon).setVisibility(View.VISIBLE);
+        findViewById(R.id.atmosphere_visib_icon).setVisibility(View.VISIBLE);
+
+        //wind
+        TextView wind_name = (TextView) findViewById(R.id.wind_name);
+        wind_name.setText("Wind");
+        findViewById(R.id.wind_mill).setVisibility(View.VISIBLE);
+        TextView wind_speed = (TextView) findViewById(R.id.wind_speed);
+        wind_speed.setText(d.wind.speed+" "+d.units.speed);
+        ImageView wind_arrow = (ImageView) findViewById(R.id.wind_arrow);
+        wind_arrow.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_back));
+        wind_arrow.setRotation(90+Float.valueOf(d.wind.direc));
+        //wind_arrow.setRotation(180);
+
+        //astronomy
+        TextView astro_name = (TextView) findViewById(R.id.astronomy_name);
+        astro_name.setText("Sunset/Sunrise");
+        SunAnimateView sun = (SunAnimateView) findViewById(R.id.astronomy_sun);
+        sun.setTime(d.astronomy.sunset, d.astronomy.sunrise);
+        ViewHelper.adjustHeight(sun);
+        sun.invalidate();
+        sun.setVisibility(View.VISIBLE);
+        TextView astro_sunrise = (TextView) findViewById(R.id.astronomy_sunrise);
+        astro_sunrise.setText(d.astronomy.sunrise);
+        TextView astro_sunset = (TextView) findViewById(R.id.astronomy_sunset);
+        astro_sunset.setText(d.astronomy.sunset);
+
+        ((ScrollView) slw).smoothScrollTo(0, 0);
     }
+
+    private boolean isNight(String set, String rise){
+        //TODO implement check night
+        //Time now =
+        SunTime sunset = SunTime.getSunTime(set);
+        SunTime sunrise = SunTime.getSunTime(rise);
+        Calendar now_time = Calendar.getInstance();
+        return SunTime.isNight(sunset, sunrise, now_time);
+    }
+
 
     private void assignTempIcon(ImageView v, String code){
         v.setImageDrawable(FileOperation.getAndroidDrawable(this, "w"+code));
@@ -400,7 +435,6 @@ public class WeatherActivity extends ActionBarActivity
 
     @Override
     public void onLoaderReset(Loader<List<JsonYahooWeather>> loader) {
-        //TODO update UI
         weatherList = null;
     }
 
@@ -427,6 +461,42 @@ public class WeatherActivity extends ActionBarActivity
     public void onProviderDisabled(String provider) {
         Log.i(TAG, "onProviderDisabled");
     }
+
+
+    protected OnTouchListener floatBtnListener = new OnTouchListener() {
+        int touchdownY = 0;
+
+        public boolean onTouch(View v, MotionEvent event) {
+
+            //int action = event.getAction();
+
+            int x = (int) event.getRawX();
+            int y = (int) event.getRawY();
+
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: // touch down so check if the
+                    touchdownY = y;
+                    break;
+
+                case MotionEvent.ACTION_MOVE: // touch drag with the ball
+                    Log.i(TAG, "value is: " + (y - touchdownY));
+                    if (y < touchdownY) {
+                        if (rv_btn.getVisibility() == View.VISIBLE)
+                            rv_btn.setVisibility(View.INVISIBLE);
+                    } else if (y > touchdownY) {
+                        if (rv_btn.getVisibility() == View.INVISIBLE)
+                            rv_btn.setVisibility(View.VISIBLE);
+                    }
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    break;
+            }
+
+            return false;
+        }
+
+    };
 
     private void sendHandlerCommand(Handler h, String obj){
         Message message = h.obtainMessage(1,obj);
