@@ -59,6 +59,7 @@
                 android:id="@+id/condition_tempdesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/condition_date"
                 android:layout_below="@id/condition_date"/>
         </RelativeLayout>
         <TextView
@@ -269,7 +270,7 @@
         android:id="@+id/rv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:layout_margin="5dp"
         ripple:rv_type="doubleRipple">
         <ImageView

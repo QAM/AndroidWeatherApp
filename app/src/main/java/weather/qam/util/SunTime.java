@@ -38,10 +38,6 @@ public class SunTime {
         return calendar;
     }
 
-    public String getTime(){
-        return time;
-    }
-
     public static boolean isNight(SunTime sunset, SunTime sunrise, Calendar nowTime){
         Log.i(TAG,"SET:"+nowTime.compareTo(sunrise.getCalendar())+" rise:"+nowTime.compareTo(sunset.getCalendar()));
         if(nowTime.compareTo(sunrise.getCalendar())>0 && nowTime.compareTo(sunset.getCalendar())<0)

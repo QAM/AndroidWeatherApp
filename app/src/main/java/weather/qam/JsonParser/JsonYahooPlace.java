@@ -34,7 +34,6 @@ public class JsonYahooPlace {
             reader.beginObject();
 
             while (reader.hasNext()) {
-                //Log.i(TAG, "loop");
                 if(reader.peek() == JsonToken.NAME){
                     name = reader.nextName();
                     Log.i(TAG, name);
@@ -86,7 +85,6 @@ public class JsonYahooPlace {
                 result.add(p);
             }
         }
-        //Log.i(TAG,"size is:"+result.size());
         return result;
     }
 

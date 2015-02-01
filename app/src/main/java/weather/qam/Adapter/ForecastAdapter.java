@@ -3,7 +3,6 @@ package weather.qam.Adapter;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import weather.qam.JsonParser.JsonYahooWeather;
 import java.util.List;
 import weather.qam.JsonParser.JsonYahooWeather.Weather.Forecast;
 import weather.qam.util.FileOperation;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 
 /**
  * Created by qam on 1/25/15.
@@ -63,9 +63,11 @@ public class ForecastAdapter extends ArrayAdapter<Forecast> {
 
         holder.tv_day.setText(forecast.day);
         holder.tv_tempDesc.setText(forecast.tempDesc);
-        holder.iv_code.setImageDrawable(FileOperation.getAndroidDrawable(getContext(), "w"+forecast.code));
-        holder.tv_tempH.setText(forecast.tempH);
-        holder.tv_tempL.setText(forecast.tempL);
+        Drawable icon = FileOperation.getAndroidDrawable(getContext(), "w"+forecast.code);
+        if(null == icon ) holder.iv_code.setImageDrawable(FileOperation.getAndroidDrawable(getContext(), "na"));
+        else holder.iv_code.setImageDrawable(icon);
+        holder.tv_tempH.setText(new StringBuilder().append(forecast.tempH).append(" ").append("F").toString());
+        holder.tv_tempL.setText(new StringBuilder().append(forecast.tempL).append(" ").append("F").toString());
         return convertView;
     }
 

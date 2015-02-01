@@ -65,7 +65,7 @@ public class LocActivity extends Activity implements AdapterView.OnItemClickList
         HistoryAdapter ha = new HistoryAdapter(this, 0, hlist);
         cityList.setAdapter(ha);
         cityList.setOnItemClickListener(this);
-        ViewHelper.adjustListView(cityList);
+        //ViewHelper.adjustListView(cityList);
     }
 
     @Override

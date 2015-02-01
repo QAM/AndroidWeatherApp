@@ -1,14 +1,12 @@
 package weather.qam.util;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.File;
 import java.io.OutputStream;
 
 import android.content.Context;
 import java.io.FileInputStream;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;

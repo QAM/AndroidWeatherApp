@@ -10,8 +10,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import weather.qam.util.FileOperation;
-
 /**
  * Created by qam on 1/22/15.
  */
@@ -213,7 +211,6 @@ public class JsonYahooWeather {
                 result.add(w);
             }
         }
-        //Log.i(TAG,"size is:"+result.size());
         return result;
     }
 

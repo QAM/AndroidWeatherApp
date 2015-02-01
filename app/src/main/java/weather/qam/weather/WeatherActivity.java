@@ -1,9 +1,7 @@
 package weather.qam.weather;
 
-import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -28,23 +26,16 @@ import android.view.View.OnTouchListener;
 import weather.qam.View.RippleView;
 import weather.qam.util.ViewHelper;
 
-import android.widget.PopupWindow;
 import android.app.Dialog;
 import android.content.Intent;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.Display;
-import android.graphics.Point;
-import android.location.LocationManager;
 import android.location.LocationManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.Criteria;
-import android.location.LocationProvider;
-import android.location.LocationListener;
 import android.content.Context;
 import android.provider.Settings;
-import android.net.Uri;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ImageView;
@@ -53,10 +44,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 import android.widget.ScrollView;
-import java.sql.Time;
-import android.R.drawable;
 import weather.qam.util.SunTime;
 import weather.qam.View.SunAnimateView;
+import android.graphics.drawable.Drawable;
 
 public class WeatherActivity extends ActionBarActivity
                             implements LoaderManager.LoaderCallbacks<List<JsonYahooWeather>>
@@ -66,7 +56,6 @@ public class WeatherActivity extends ActionBarActivity
 
     List<JsonYahooWeather> weatherList;
     RippleView rv_btn;
-    PopupWindow popupWindow;
     View rlw;
     View slw;
     private Dialog mEnableGPS;
@@ -89,13 +78,9 @@ public class WeatherActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         mActivity = this;
-
-
-
-        //btn = (ImageButton) findViewById(R.id.btn);
         rv_btn = (RippleView) findViewById(R.id.rv);
 
-        rv_btn.setOnTouchListener(new OnTouchListener() {
+        /*rv_btn.setOnTouchListener(new OnTouchListener() {
             int[] touchdown = new int[] { 0, 0 };
             int[] touchXY = new int[]{ 0, 0 };
 
@@ -118,7 +103,6 @@ public class WeatherActivity extends ActionBarActivity
                         Display display = getWindowManager().getDefaultDisplay();
                         Point size = new Point();
                         display.getSize(size);
-                        //TODO control float button position
                         int[] boundary = new int[]{
                                 (x - touchdown[0]), (y - touchdown[1]),
                                 (x + v.getWidth() - touchdown[0]), (y - touchdown[1] + v.getHeight())};
@@ -143,17 +127,20 @@ public class WeatherActivity extends ActionBarActivity
                 return false;
             }
 
+        });*/
+
+        rv_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                WeatherActivity.startActivityForResult(mActivity, LocActivity.class, null, activityReqNum);
+            }
         });
 
-        rlw = (View) findViewById(R.id.rlw);
+        rlw = findViewById(R.id.rlw);
 
-        slw = (View) findViewById(R.id.slw);
-        //slw.setOnTouchListener(floatBtnListener);
-        rlw.setOnTouchListener(floatBtnListener);
+        slw = findViewById(R.id.slw);
+        slw.setOnTouchListener(floatBtnListener);
 
-
-
-        //initPopUpLOC(this);
         initLoc();
         popDlgGpsOnOff();
     }
@@ -176,25 +163,9 @@ public class WeatherActivity extends ActionBarActivity
         Criteria criteria = new Criteria();
         locProvider = locationManager.getBestProvider(criteria, false);
         Log.i(TAG,"loc provider is:"+locProvider);
-        Location location = locationManager.getLastKnownLocation(locProvider);
+        //Location location = locationManager.getLastKnownLocation(locProvider);
 
 
-    }
-
-    public void popupLOC(){
-        //popupWindow.showAsDropDown(btnOpenPopup, 50, -30);
-        popupWindow.showAtLocation(rlw, 50, 50, 0b0);
-        //mLOCLookUp = new Dialog(this);
-        //mLOCLookUp.setTitle(mActivity.getResources().getString(R.string.Login_text));
-        //mLOCLookUp.setCancelable(false);
-        //mLOCLookUp.setContentView(R.layout.loc_popup);
-        //Button loginBtnOK = (Button)mLoginRegisterDlg.findViewById(R.id.btnOK);
-        //Button loginBtnCancel = (Button)mLoginRegisterDlg.findViewById(R.id.btnCancel);
-        //loginBtnOK.setOnClickListener(loginDlgBtnOKOnClkLis);
-        //loginBtnCancel.setOnClickListener(loginRegisterDlgBtnCancelOnClkLis);
-
-
-        //mLOCLookUp.show();
     }
 
     private void popDlgGpsOnOff(){
@@ -214,18 +185,7 @@ public class WeatherActivity extends ActionBarActivity
     }
 
     public void enableGPSService(){
-        /*String provider = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-        if(!provider.contains("gps")){
-            //if gps is disabled
-            final Intent poke = new Intent();
-            poke.setClassName("com.android.settings", "com.android.settings.widget.SettingsAppWidgetProvider");
-            poke.addCategory(Intent.CATEGORY_ALTERNATIVE);
-            poke.setData(Uri.parse("3"));
-            sendBroadcast(poke);
-        }*/
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS/*"android.location.GPS_ENABLED_CHANGE"*/);
-        //intent.putExtra("enabled", true);
-        //mActivity.sendBroadcast(intent);
         startActivity(intent);
     }
 
@@ -245,12 +205,8 @@ public class WeatherActivity extends ActionBarActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
         if (requestCode == activityReqNum) {
-            // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
                 Log.i(TAG, "onActivityResult");
                 String s = data.getStringExtra("MESSAGE");
                 if(s.equals(AppConstant.currentLoc)) popDlgGpsOnOff();
@@ -275,23 +231,12 @@ public class WeatherActivity extends ActionBarActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_weather, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -332,7 +277,6 @@ public class WeatherActivity extends ActionBarActivity
 
         Bundle b = new Bundle();
         String s = new StringBuilder().append(String.valueOf(lat)).append(",").append(String.valueOf(longi)).toString();
-        //String s = "tai";
         b.putString(AppConstant.asynctaskGetPlace,s);
         b.putInt(AppConstant.asynctaskGetCommand,2);
         getLoaderManager().restartLoader(0, b, this);
@@ -350,7 +294,7 @@ public class WeatherActivity extends ActionBarActivity
         TextView cond_tempdesc = (TextView) findViewById(R.id.condition_tempdesc);
         cond_tempdesc.setText(d.condition.tempDesc);
         TextView cond_temp = (TextView) findViewById(R.id.condition_temp);
-        cond_temp.setText(d.condition.temp);
+        cond_temp.setText(new StringBuilder().append(d.condition.temp).append(" ").append(d.units.temp).toString());
         ImageView cond_code = (ImageView) findViewById(R.id.condition_code);
         assignTempIcon(cond_code, d.condition.code);
         TextView forecast_name = (TextView) findViewById(R.id.forecast_name);
@@ -368,11 +312,11 @@ public class WeatherActivity extends ActionBarActivity
         if(isNight(d.astronomy.sunset, d.astronomy.sunrise)) atmos_sun.setImageDrawable(getResources().getDrawable(R.drawable.sunset));
         else atmos_sun.setImageDrawable(getResources().getDrawable(R.drawable.sunrise));
         TextView atmos_hum = (TextView) findViewById(R.id.atmosphere_hum);
-        atmos_hum.setText(d.atmosphere.humidity);
+        atmos_hum.setText(new StringBuilder().append(d.atmosphere.humidity).append(" ").append("%").toString());
         TextView atmos_press = (TextView) findViewById(R.id.atmosphere_press);
-        atmos_press.setText(d.atmosphere.pressure);
+        atmos_press.setText(new StringBuilder().append(d.atmosphere.pressure).append(" ").append(d.units.pressure).toString());
         TextView atmos_visib = (TextView) findViewById(R.id.atmosphere_visib);
-        atmos_visib.setText(d.atmosphere.visibility);
+        atmos_visib.setText(new StringBuilder().append(d.atmosphere.visibility).append(" ").append(d.units.distance).toString());
         findViewById(R.id.atmosphere_hum_icon).setVisibility(View.VISIBLE);
         findViewById(R.id.atmosphere_press_icon).setVisibility(View.VISIBLE);
         findViewById(R.id.atmosphere_visib_icon).setVisibility(View.VISIBLE);
@@ -382,7 +326,7 @@ public class WeatherActivity extends ActionBarActivity
         wind_name.setText("Wind");
         findViewById(R.id.wind_mill).setVisibility(View.VISIBLE);
         TextView wind_speed = (TextView) findViewById(R.id.wind_speed);
-        wind_speed.setText(d.wind.speed+" "+d.units.speed);
+        wind_speed.setText(new StringBuilder().append(d.wind.speed).append(" ").append(d.units.speed).toString());
         ImageView wind_arrow = (ImageView) findViewById(R.id.wind_arrow);
         wind_arrow.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_back));
         wind_arrow.setRotation(90+Float.valueOf(d.wind.direc));
@@ -405,8 +349,6 @@ public class WeatherActivity extends ActionBarActivity
     }
 
     private boolean isNight(String set, String rise){
-        //TODO implement check night
-        //Time now =
         SunTime sunset = SunTime.getSunTime(set);
         SunTime sunrise = SunTime.getSunTime(rise);
         Calendar now_time = Calendar.getInstance();
@@ -415,7 +357,9 @@ public class WeatherActivity extends ActionBarActivity
 
 
     private void assignTempIcon(ImageView v, String code){
-        v.setImageDrawable(FileOperation.getAndroidDrawable(this, "w"+code));
+        Drawable icon = FileOperation.getAndroidDrawable(this, "w"+code);
+        if(null == icon) v.setImageDrawable(FileOperation.getAndroidDrawable(this, "na"));
+        else v.setImageDrawable(icon);
     }
 
     @Override
@@ -467,10 +411,6 @@ public class WeatherActivity extends ActionBarActivity
         int touchdownY = 0;
 
         public boolean onTouch(View v, MotionEvent event) {
-
-            //int action = event.getAction();
-
-            int x = (int) event.getRawX();
             int y = (int) event.getRawY();
 
             switch (event.getAction()) {
@@ -487,6 +427,8 @@ public class WeatherActivity extends ActionBarActivity
                         if (rv_btn.getVisibility() == View.INVISIBLE)
                             rv_btn.setVisibility(View.VISIBLE);
                     }
+                    Log.i(TAG,"x:"+slw.getScrollX()+" y:"+slw.getScrollY());
+                    rv_btn.layout(slw.getScrollX(),slw.getScrollY(),slw.getScrollX()+rv_btn.getWidth(),slw.getScrollY()+rv_btn.getHeight());
                     break;
 
                 case MotionEvent.ACTION_UP:

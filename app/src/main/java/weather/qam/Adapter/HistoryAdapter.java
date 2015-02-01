@@ -3,16 +3,12 @@ package weather.qam.Adapter;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import weather.qam.JsonParser.JsonYahooWeather;
 import java.util.List;
-import weather.qam.JsonParser.JsonYahooWeather.Weather.Forecast;
-import weather.qam.util.FileOperation;
 import weather.qam.weather.R;
 
 import android.view.ViewGroup;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.ImageView;
 import android.view.LayoutInflater;
 import android.app.Activity;
 
