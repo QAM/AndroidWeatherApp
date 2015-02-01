@@ -2,6 +2,7 @@ package weather.qam.weather;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -149,7 +150,7 @@ public class WeatherActivity extends ActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
-        locationManager.requestLocationUpdates(locProvider, 400, 1, this);
+        //locationManager.requestLocationUpdates(locProvider, 400, 1, this);
     }
 
     @Override
@@ -169,11 +170,15 @@ public class WeatherActivity extends ActionBarActivity
     }
 
     private void popDlgGpsOnOff(){
-        if( locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) )
+        if( locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ){
             sendHandlerCommand(DOCommandhandler, HANDLER_GET_GPS);
+            //Toast.makeText(WeatherActivity.this, getResources().getString(R.string.gps_notify), Toast.LENGTH_SHORT).show();
+            ViewHelper.showTost(this, Gravity.CENTER, getResources().getString(R.string.gps_notify));
+        }
         else{
             mEnableGPS = new Dialog(mActivity);
-            mEnableGPS.setTitle(mActivity.getResources().getString(R.string.gps_question));
+            //mEnableGPS.setTitle(mActivity.getResources().getString(R.string.gps_question));
+            mEnableGPS.setTitle("GPS Enable");
             mEnableGPS.setCancelable(false);
             mEnableGPS.setContentView(R.layout.dlg_gpsonof);
             Button loginBtnOK = (Button)mEnableGPS.findViewById(R.id.btnOK);
@@ -185,6 +190,7 @@ public class WeatherActivity extends ActionBarActivity
     }
 
     public void enableGPSService(){
+        locationManager.requestLocationUpdates(locProvider, 400, 1, this);
         Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS/*"android.location.GPS_ENABLED_CHANGE"*/);
         startActivity(intent);
     }
@@ -210,7 +216,10 @@ public class WeatherActivity extends ActionBarActivity
                 Log.i(TAG, "onActivityResult");
                 String s = data.getStringExtra("MESSAGE");
                 if(s.equals(AppConstant.currentLoc)) popDlgGpsOnOff();
-                else getWeatherBYText(data.getStringExtra("MESSAGE"));
+                else{
+                    locationManager.removeUpdates(this);
+                    getWeatherBYText(data.getStringExtra("MESSAGE"));
+                }
             }
         }
     }
@@ -357,7 +366,7 @@ public class WeatherActivity extends ActionBarActivity
 
 
     private void assignTempIcon(ImageView v, String code){
-        Drawable icon = FileOperation.getAndroidDrawable(this, "w"+code);
+        Drawable icon = FileOperation.getAndroidDrawable(this, "w" + code);
         if(null == icon) v.setImageDrawable(FileOperation.getAndroidDrawable(this, "na"));
         else v.setImageDrawable(icon);
     }
