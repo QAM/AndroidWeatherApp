@@ -216,10 +216,13 @@ public class WeatherActivity extends ActionBarActivity
             if (resultCode == RESULT_OK) {
                 Log.i(TAG, "onActivityResult");
                 String s = data.getStringExtra("MESSAGE");
+                Log.i(TAG, "s is:"+s);
                 if(s.equals(AppConstant.currentLoc)) popDlgGpsOnOff();
-                else{
+                else if(s.length() > 0){
                     locationManager.removeUpdates(this);
                     getWeatherBYText(data.getStringExtra("MESSAGE"));
+                }else{
+                    Log.i(TAG, "s is not valid");
                 }
             }
         }
@@ -397,7 +400,7 @@ public class WeatherActivity extends ActionBarActivity
         Log.i(TAG, "onLocationChanged");
         getWeatherBYLatLong(location.getLatitude(), location.getLongitude());
         locationManager.removeUpdates(this);
-        locationManager.requestLocationUpdates(locProvider, 400, 1, this);
+        locationManager.requestLocationUpdates(locProvider, 600000, 1000, this);
     }
 
     @Override
