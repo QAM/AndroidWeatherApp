@@ -22,6 +22,10 @@ LocActivity.java
 JsonAsyncTaskLoader.java
 WeatherActivity.java
 
+![alt tag](https://cloud.githubusercontent.com/assets/3173971/6014655/40a1aeac-ab1d-11e4-9157-50a4048f622b.png)
+![alt tag](https://cloud.githubusercontent.com/assets/3173971/6014656/40b09d86-ab1d-11e4-9d41-a5c36bf31d40.png)
+![alt tag](https://cloud.githubusercontent.com/assets/3173971/6014657/40bb7328-ab1d-11e4-9592-8fd813f36955.png)
+
 Reference:
 https://developer.yahoo.com/weather/
 http://www.survivingwithandroid.com/2014/02/android-weather-app-tutorial-step-by.html
