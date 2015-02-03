@@ -1,6 +1,6 @@
-# AndroidWeatherApp
+# Android Weather Application
 
-The Android is development for Weather.
+The Android application is developed for Weather forecast.
 
 User can learn several skills from this App.
 
@@ -11,7 +11,7 @@ JsonAsyncTaskLoader.java
 JsonYahooWeather.java
 JsonYahooPlace.java
 
-3. Floating Button with movement(Copy RippleView related files from other github repository)
+3. Floating Button with/without movement(Copy RippleView related files from other github repository)
 RippleView.java
 WeatherActivity.java
 
@@ -27,6 +27,7 @@ WeatherActivity.java
 ![alt tag](https://cloud.githubusercontent.com/assets/3173971/6014657/40bb7328-ab1d-11e4-9592-8fd813f36955.png)
 
 Reference:
+
 https://developer.yahoo.com/weather/
 http://www.survivingwithandroid.com/2014/02/android-weather-app-tutorial-step-by.html
 http://developer.android.com/reference/android/content/AsyncTaskLoader.html
