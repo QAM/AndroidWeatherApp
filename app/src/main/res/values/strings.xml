@@ -8,5 +8,6 @@
     <string name="gps_skip">Skip</string>
     <string name="gps_question">To See your local weather, please turn on the location service</string>
     <string name="back_notify">Press Back again to Exit</string>
+    <string name="gps_notify">Start to identify location</string>
 
 </resources>

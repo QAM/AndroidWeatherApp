@@ -45,6 +45,9 @@ public class CoutryDBHelper extends SQLiteOpenHelper{
         {
             Log.i("openDB", "Creating sqliteDBInstance...");
             this.sqliteDBInstance = this.getWritableDatabase();
+        }else{
+            if(!this.sqliteDBInstance.isOpen())
+                this.sqliteDBInstance = this.getWritableDatabase();
         }
     }
 
@@ -82,6 +85,28 @@ public class CoutryDBHelper extends SQLiteOpenHelper{
     public String[] getAllCountries()
     {
         Cursor cursor = this.sqliteDBInstance.query(DB_TABLE_NAME, new String[] {DB_COLUMN_1_NAME}, null, null, null, null, null);
+
+        if(cursor.getCount() >0)
+        {
+            String[] str = new String[cursor.getCount()];
+            int i = 0;
+
+            while (cursor.moveToNext())
+            {
+                str[i] = cursor.getString(cursor.getColumnIndex(DB_COLUMN_1_NAME));
+                i++;
+            }
+            return str;
+        }
+        else
+        {
+            return new String[] {};
+        }
+    }
+
+    public String[] getCountries(String search)
+    {
+        Cursor cursor = this.sqliteDBInstance.query(DB_TABLE_NAME, new String[] {DB_COLUMN_1_NAME}, DB_COLUMN_1_NAME + " like '%" + search + "%'", null, null, null, null);
 
         if(cursor.getCount() >0)
         {

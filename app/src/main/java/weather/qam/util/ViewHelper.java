@@ -5,6 +5,13 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ListView;
 import android.view.View;
+import android.content.Context;
+import android.widget.Toast;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.graphics.Color;
+import weather.qam.weather.R;
+
 /**
  * Created by qam on 1/30/15.
  */
@@ -32,5 +39,22 @@ public class ViewHelper {
         Log.i(TAG, "width is: "+v.getWidth()+" height is:"+v.getHeight());
         params.height = v.getWidth()*3/8;
         v.requestLayout();
+    }
+
+    public static void showTost(Context mContext,int gravityI, String contentS){
+        Toast toast = new Toast(mContext);
+        LinearLayout layout = new LinearLayout(mContext);
+        layout.setBackgroundResource(R.drawable.toast_bg);
+        TextView textView = new TextView(mContext);
+        textView.setText(contentS);
+        textView.setTextSize(16);
+        textView.setTextColor(Color.WHITE);
+        layout.addView(textView);
+        toast.setView(layout);
+
+        toast.setGravity(gravityI, 0, 0);
+
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
